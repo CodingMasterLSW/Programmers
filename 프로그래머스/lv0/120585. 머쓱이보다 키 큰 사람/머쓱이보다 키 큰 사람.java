@@ -1,15 +1,9 @@
-import java.util.*;
 class Solution {
-    public int solution (int[] array, int height){
+    public int solution(int[] array, int height){
         int result = 0;
-        Arrays.sort(array);
-        
-        for(int i=0; i<array.length; i++) {
-            if (height< array[array.length -i -1]){
-                result++;
-            } else {
-                break;
-            }
-        } return result;
-    }
+        for(int i : array){
+            result += (i>height) ? 1 : 0;
+            } return result; 
+        }
+    
 }

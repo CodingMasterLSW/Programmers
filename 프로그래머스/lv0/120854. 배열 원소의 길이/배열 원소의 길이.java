@@ -1,14 +1,7 @@
+import java.util.Arrays;
+
 class Solution {
-    public int[] solution(String[] strlist) {
-        int[] answer = new int[strlist.length];
-        int length = strlist.length;
-        for(int i=0; i<length; i++){
-            answer[i] = strlist[i].length();
-        }
-        
-        
-    
-        
-        return answer;
+    public int[] solution(String[] strList) {
+        return Arrays.stream(strList).mapToInt(String::length).toArray();
     }
 }

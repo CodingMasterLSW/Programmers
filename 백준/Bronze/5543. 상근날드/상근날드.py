@@ -1,9 +1,4 @@
-b1=int(input())
-b2=int(input())
-b3=int(input())
-d1=int(input())
-d2=int(input())
+burger=[int(input()) for i in range(3)]
+drink=[int(input()) for i in range(2)]
 
-minburger = min(b1,b2,b3)
-mindrink = min(d1,d2)
-print(minburger+mindrink-50)
+print(min(burger)+min(drink)-50)

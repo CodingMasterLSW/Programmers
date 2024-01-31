@@ -11,28 +11,29 @@ import java.util.Set;
 
 public class Main {
 
-    static List<String> lists = new ArrayList<>();
+    static Set<String> sets = new HashSet<>();
+    static List<String> lists;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int k = Integer.parseInt(br.readLine());
 
         for (int i = 0; i < k; i++) {
-            lists.add(br.readLine());
+            sets.add(br.readLine());
         }
-        Set<String> set = new HashSet<>(lists);
-        List<String> uniqueLists = new ArrayList<>(set);
+        lists = new ArrayList<>(sets);
 
-        Collections.sort(uniqueLists, (a, b) -> {
+        Collections.sort(lists, (a, b) -> {
             if (a.length() == b.length()) {
                 return a.compareTo(b);
             } else {
                 return Integer.compare(a.length(), b.length());
             }
         });
+        
+        for(String i : lists){
+            System.out.println(i);
+        }
 
-       for(String i : uniqueLists){
-           System.out.println(i);
-       }
     }
 }

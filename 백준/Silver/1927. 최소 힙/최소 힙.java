@@ -1,4 +1,5 @@
 
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -14,15 +15,16 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int n = Integer.parseInt(br.readLine());
+        int m = Integer.parseInt(br.readLine());
 
-        for (int i = 0; i < n; i++) {
-            int x = Integer.parseInt(br.readLine());
+        for (int i = 0; i < m; i++) {
+            int x = Math.abs(Integer.parseInt(br.readLine()));
+
             if (x == 0) {
                 if (q.isEmpty()) {
                     bw.write(String.valueOf(0));
                     bw.newLine();
-                } else{
+                } else {
                     bw.write(String.valueOf(q.poll()));
                     bw.newLine();
                 }
@@ -33,6 +35,5 @@ public class Main {
         bw.flush();
         bw.close();
     }
-
 
 }

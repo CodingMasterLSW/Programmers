@@ -36,8 +36,10 @@ public class Main {
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
+
                 if (!visited[i][j]) {
-                    dfs(i, j);
+                    char currentColor = area[i][j];
+                    dfs(i, j, currentColor);
                     normalPerson++;
                 }
             }
@@ -57,13 +59,14 @@ public class Main {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (!visited[i][j]) {
-                    dfs(i, j);
+                    char currentColor = area[i][j];
+                    dfs(i, j, currentColor);
                     colorBlindPerson++;
                 }
             }
 
         }
-        bw.write(String.valueOf(normalPerson)+" ");
+        bw.write(String.valueOf(normalPerson) + " ");
         bw.write(String.valueOf(colorBlindPerson));
 
         bw.flush();
@@ -71,25 +74,25 @@ public class Main {
     }
 
 
-    public static void dfs(int x, int y) {
+    public static void dfs(int x, int y, char currentColor) {
+
+        if (x < 0 || x >= n || y < 0 || y >= n) {
+            return;
+        }
+
+        if (visited[x][y]) {
+            return;
+        }
+
+        if (area[x][y] != currentColor){
+            return;
+        }
 
         visited[x][y] = true;
 
-        char currentColor = area[x][y];
-
         for (int i = 0; i < 4; i++) {
-            int ndx = x + dx[i];
-            int ndy = y + dy[i];
-
-            if (ndx < 0 || ndx >= n || ndy < 0 || ndy >= n) {
-                continue;
-            }
-            if (!visited[ndx][ndy] && area[ndx][ndy] == currentColor) {
-                dfs(ndx, ndy);
-            }
-
+            dfs(x + dx[i], y + dy[i], currentColor);
         }
-
 
     }
 

@@ -1,5 +1,4 @@
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,6 +14,8 @@ public class Main {
     static int[] count;
     static int[] dir = {1,-1,2};
 
+    static int max = 100000;
+
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -22,14 +23,14 @@ public class Main {
         N = Integer.parseInt(st1.nextToken());
         K = Integer.parseInt(st1.nextToken());
 
-        count = new int[200000];
+        count = new int[max+1];
 
         bfs(N);
     }
 
 
     static void bfs(int n){
-        boolean[] visited = new boolean[200000];
+        boolean[] visited = new boolean[max+1];
         Queue<Integer> q = new LinkedList<>();
 
         q.add(n);
@@ -53,7 +54,7 @@ public class Main {
                     nextLocation = currentLocation + dir[i];
                 }
 
-                if(nextLocation<0 || nextLocation>=visited.length){
+                if(nextLocation<0 || nextLocation>max){
                     continue;
                 }
 

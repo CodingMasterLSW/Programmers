@@ -9,16 +9,18 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String s1 = br.readLine();
         String s2 = br.readLine();
-        s1 = s1.replaceAll(s2,"1");
-
+        
+        int index = 0;
         int cnt = 0;
-        for(int i=0; i<s1.length(); i++) {
-            if(s1.charAt(i)=='1'){
+        
+        while(index <= s1.length() - s2.length()){
+            if(s1.substring(index, index+s2.length()).equals(s2)){
                 cnt++;
+                index+=s2.length();
+            } else{
+                index++;
             }
         }
         System.out.println(cnt);
-
     }
-
 }

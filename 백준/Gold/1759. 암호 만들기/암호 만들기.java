@@ -4,7 +4,6 @@ public class Main {
 
     static int N;
     static int M;
-    static boolean[] visited;
     static char[] arr;
     static StringBuilder sb = new StringBuilder();
 
@@ -19,18 +18,13 @@ public class Main {
         }
         Arrays.sort(arr);
 
-        visited = new boolean[M];
         char[] resources = new char[N];
-        backtracking(0, resources, 0, visited);
-
-        if (sb.length() > 0 && sb.charAt(sb.length() - 1) == '\n') {
-            sb.setLength(sb.length() - 1);
-        }
-
+        backtracking(0, resources, 0);
+        
         System.out.print(sb.toString());
     }
 
-    public static void backtracking(int depth, char[] resources, int start, boolean[] visited) {
+    public static void backtracking(int depth, char[] resources, int start) {
 
         if (N == depth) {
             int aCount = 0;
@@ -43,8 +37,8 @@ public class Main {
                     bCount++;
                 }
             }
-            if(aCount>=1 && bCount>=2){
-                for(int i=0; i<N; i++){
+            if (aCount >= 1 && bCount >= 2) {
+                for (int i = 0; i < N; i++) {
                     sb.append(resources[i]);
                 }
                 sb.append("\n");
@@ -52,13 +46,9 @@ public class Main {
             return;
         }
         for (int i = start; i < M; i++) {
-            if (!visited[i]) {
-                visited[i] = true;
-                resources[depth] = arr[i];
-                backtracking(depth + 1, resources, i+1, visited);
+            resources[depth] = arr[i];
+            backtracking(depth + 1, resources, i+1);
 
-                visited[i] = false;
-            }
         }
     }
 }

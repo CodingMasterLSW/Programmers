@@ -1,21 +1,25 @@
 import java.util.*;
+import java.io.*;
 
 public class Main {
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        int K = sc.nextInt();
-        sc.nextLine();
-        char[] lists = sc.nextLine().toCharArray();
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
+
+        char[] input = br.readLine().toCharArray();
 
         int cnt = 0;
         for(int i=0; i<N; i++){
-            if (lists[i] == 'P') {
-                for(int j= Math.max(0, i-K); j<= Math.min(N-1, i+K); j++){
-                    if(lists[j] == 'H'){
+            if(input[i] == 'P'){
+                for(int j= Math.max(0, i-K); j<=Math.min(N-1, i+K); j++) {
+                    if (input[j] == 'H') {
                         cnt++;
-                        lists[j] = 'X';
+                        input[j] = 'X';
                         break;
                     }
                 }
@@ -23,5 +27,4 @@ public class Main {
         }
         System.out.println(cnt);
     }
-
 }

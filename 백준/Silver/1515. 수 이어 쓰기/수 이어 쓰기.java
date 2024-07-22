@@ -1,4 +1,3 @@
-
 import java.io.*;
 
 public class Main {
@@ -8,20 +7,23 @@ public class Main {
         String s = br.readLine();
 
         int pt = 0;
-        int base = 0;
+        int current = 0;
 
-        while (true) {
-            base++;
-            String tmp = String.valueOf(base);
-            for (int i = 0; i < tmp.length(); i++) {
-                if (tmp.charAt(i) == s.charAt(pt))
+        while(true){
+            current++;
+            String tmp = String.valueOf(current);
+
+            for(int i=0; i<tmp.length(); i++){
+                if(tmp.charAt(i) == s.charAt(pt)){
                     pt++;
-                if (pt == s.length()) {
-                    System.out.println(base);
+                }
+                if(s.length() == pt){
+                    System.out.println(tmp);
                     return;
                 }
             }
         }
+
     }
 
 }

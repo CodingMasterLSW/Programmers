@@ -1,5 +1,5 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
 
@@ -8,45 +8,45 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
 
         int[] arr = new int[N];
-        int sum = 0;
 
+        int sum = 0;
         StringTokenizer st = new StringTokenizer(br.readLine());
         for(int i=0; i<N; i++){
             arr[i] = Integer.parseInt(st.nextToken());
             sum+= arr[i];
         }
-
-        Arrays.sort(arr);
         int M = Integer.parseInt(br.readLine());
 
-        if(M>=sum){
+        Arrays.sort(arr);
+
+        if(sum<=M){
             System.out.println(arr[N-1]);
         } else{
-
-            long start = 0;
-            long end = arr[N-1];
-            long result = 0;
+            int start = 0;
+            int end = arr[N-1];
+            int mid = 0;
+            int result = 0;
 
             while(start<=end){
-                long mid = (start+end)/2;
-                long s = 0;
+                int s = 0;
+                mid = (start+end)/2;
 
-                for(long v : arr){
+                for(int v : arr){
                     if(v>=mid){
                         s+=mid;
                     } else{
                         s+=v;
                     }
                 }
-                if(s>M){
-                    end = mid-1;
-                } else{
+
+                if(s<=M){
                     start = mid+1;
                     result = Math.max(result, mid);
+                } else{
+                    end = mid-1;
                 }
             }
             System.out.println(result);
         }
     }
-
 }

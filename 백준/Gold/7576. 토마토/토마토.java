@@ -1,74 +1,81 @@
+import java.util.*;
+import java.io.*;
 
-
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
-
-// 토마토는 bfs를 사용해보자
 public class Main {
 
-    static Queue<int[]> q = new LinkedList<>();
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, -1, 1};
+    static int N;
+    static int M;
+    static int[] dx = {0,0,-1,1};
+    static int[] dy = {-1,1,0,0};
     static int[][] graph;
+    static int currentMax = 1;
+    static boolean[][] visited;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int m = sc.nextInt();
-        int n = sc.nextInt();
-        sc.nextLine();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        M = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
+        Queue<int[]> starts = new LinkedList<>();
 
-        graph = new int[n][m];
+        graph = new int[N][M];
+        visited = new boolean[N][M];
 
-        for (int i = 0; i < n; i++) {
-
-            String[] numbers = sc.nextLine().split(" ");
-
-            for (int j = 0; j < m; j++) {
-                graph[i][j] = Integer.parseInt(numbers[j]);
-                if (graph[i][j] == 1) {
-                    q.add(new int[]{i, j});
+        for(int i=0; i<N; i++){
+            st = new StringTokenizer(br.readLine());
+            for(int j=0; j<M; j++){
+                graph[i][j] = Integer.parseInt(st.nextToken());
+                if(graph[i][j] == 1){
+                   starts.add(new int[]{i,j});
+                   visited[i][j] = true;
                 }
             }
-
         }
-        System.out.println(bfs());
+        bfs(starts);
 
+        int res = 0;
+        for(int i=0; i<N; i++){
+            for(int j=0; j<M; j++){
+                if(graph[i][j] == 0){
+                    res++;
+                }
+            }
+        }
+        if(res == 0){
+            System.out.println(currentMax-1);
+        } else{
+            System.out.println("-1");
+        }
+    }
+    public static void bfs(Queue<int[]> starts){
+        Queue<int[]> q = new LinkedList<>(starts);
+
+        while(!q.isEmpty()){
+            int current[] = q.poll();
+            int currentX = current[0];
+            int currentY = current[1];
+
+            for(int i=0; i<4; i++){
+                int ndx = currentX + dx[i];
+                int ndy = currentY + dy[i];
+
+                if(ndx<0 || ndx>=N || ndy<0 || ndy>=M){
+                    continue;
+                }
+                if(visited[ndx][ndy] || graph[ndx][ndy]!= 0){
+                    continue;
+                }
+
+                visited[ndx][ndy] = true;
+
+                q.offer(new int[]{ndx,ndy});
+
+                graph[ndx][ndy] = graph[currentX][currentY]+1;
+                if(currentMax<graph[ndx][ndy]){
+                    currentMax = graph[ndx][ndy];
+                }
+            }
+        }
 
     }
-
-    public static int bfs() {
-        int days = 0;
-
-        while (!q.isEmpty()) {
-            int size = q.size();
-            for (int s = 0; s < size; s++) {
-                int[] cur = q.poll();
-
-                for (int i = 0; i < 4; i++) {
-                    int nx = cur[0] + dx[i];
-                    int ny = cur[1] + dy[i];
-
-                    if (nx >= 0 && nx < graph.length && ny >= 0 && ny < graph[0].length
-                            && graph[nx][ny] == 0) {
-                        graph[nx][ny] = 1;
-                        q.add(new int[]{nx, ny});
-                    }
-
-                }
-
-
-            }
-            days++;
-        }
-        for (int i =0; i<graph.length; i++){
-            for(int j = 0; j<graph[0].length; j++){
-                if(graph[i][j]==0){
-                    return -1;
-                }
-            }
-        }
-        return days-1;
-    }
-
 }

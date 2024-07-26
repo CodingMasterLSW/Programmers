@@ -10,13 +10,13 @@ public class Main {
     static int[][] graph;
     static int currentMax = 1;
     static boolean[][] visited;
+    static List<int[]> starts = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         M = Integer.parseInt(st.nextToken());
         N = Integer.parseInt(st.nextToken());
-        Queue<int[]> starts = new LinkedList<>();
 
         graph = new int[N][M];
         visited = new boolean[N][M];
@@ -47,7 +47,7 @@ public class Main {
             System.out.println("-1");
         }
     }
-    public static void bfs(Queue<int[]> starts){
+    public static void bfs(List<int[]> starts){
         Queue<int[]> q = new LinkedList<>(starts);
 
         while(!q.isEmpty()){

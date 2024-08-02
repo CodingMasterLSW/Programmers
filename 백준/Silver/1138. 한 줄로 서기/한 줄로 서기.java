@@ -1,5 +1,5 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
 
@@ -7,25 +7,33 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
 
-        List<Integer> lists = new ArrayList<>();
-
         int[] arr = new int[N];
+        int[] result = new int[N];
+
         StringTokenizer st = new StringTokenizer(br.readLine());
         for(int i=0; i<N; i++){
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        for(int i=N; i>0; i--){
-            lists.add(arr[i-1],i);
+        // 작은 수 부터 넣기
+        for(int i=1; i<=N; i++){
+            int pos = 0;
+            int cnt = arr[i-1];
+
+            while(cnt>0 || result[pos] != 0){
+                if(result[pos] == 0){
+                    cnt--;
+                }
+                pos++;
+            }
+            result[pos] = i;
         }
 
         StringBuilder sb = new StringBuilder();
-        for(int i : lists){
-            sb.append(i+" ");
+        for(int i=0; i<N; i++){
+            sb.append(result[i]+" ");
         }
         System.out.println(sb.toString());
-
-
     }
 
 }

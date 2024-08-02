@@ -1,36 +1,43 @@
+import java.io.*;
 import java.util.*;
 
 public class Main {
 
     static int N;
     static int M;
-    static boolean[] visited;
+    static StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt();
-        M = sc.nextInt();
-        visited = new boolean[N+1];
-        int[] sequence = new int[M];
-        cal(N,M, visited, sequence, 0);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+
+        int depth =0;
+        int[] resources = new int[M];
+        boolean[] visited = new boolean[N+1];
+
+        backtracking(depth, resources, visited);
+        System.out.println(sb.toString());
     }
-    public static void cal(int n, int m, boolean[] visited, int[] sequence, int depth){
 
+    public static void backtracking(int depth, int[] resources, boolean[] visited){
         if(depth == M){
             for(int i=0; i<M; i++){
-                System.out.print(sequence[i]+" ");
+                sb.append(resources[i]+" ");
             }
-            System.out.println();
+            sb.append("\n");
             return;
         }
 
         for(int i=1; i<=N; i++){
             if(!visited[i]){
                 visited[i] = true;
-                sequence[depth] = i;
-                cal(n, m, visited, sequence, depth+1);
+                resources[depth] = i;
+                backtracking(depth+1, resources, visited);
                 visited[i] = false;
             }
         }
     }
+
 }

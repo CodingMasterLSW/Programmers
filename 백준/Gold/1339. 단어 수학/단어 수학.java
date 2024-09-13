@@ -1,62 +1,60 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.io.*;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
-        Map<Character, Integer> weightMap = new HashMap<>();
-        List<String> wordList = new ArrayList<>();
 
-        for (int i = 0; i < N; i++) {
-            String word = br.readLine();
-            wordList.add(word);
-            int len = word.length();
-            // 가중치 계산 코드
-            for (int j = 0; j < len; j++) {
-                char ch = word.charAt(j);
-                int weight = (int) Math.pow(10, len - j - 1);
-                // 기존 값에 더하기
-                weightMap.put(ch, weightMap.getOrDefault(ch, 0) + weight);
+        List<String> lists = new ArrayList<>();
+        Map<Character, Integer> wordWeight = new HashMap<>();
+
+        for(int i=0; i<N; i++){
+            String s = br.readLine();
+            lists.add(s);
+            int len = s.length();
+
+            for(int j=0; j<len; j++){
+                char c = s.charAt(j);
+                int weight = (int) Math.pow(10,len-j);
+                wordWeight.put(c, wordWeight.getOrDefault(c, 0)+ weight);
             }
+
         }
 
-        List<Character> keySet = new ArrayList<>(weightMap.keySet());
-        keySet.sort((k1, k2) ->
-                weightMap.get(k2).compareTo(weightMap.get(k1)));
-        // value 값 높은 순서대로 큰 수 배정
+        List<Character> tmpList = new ArrayList<>(wordWeight.keySet());
+        Collections.sort(tmpList, (a1, a2) ->
+                wordWeight.get(a2)-wordWeight.get(a1));
 
-        Map<Character, Integer> resultMap = new HashMap<>();
 
-        int startValue = 9;
+        Map<Character, Integer> resMap = new HashMap<>();
 
-        for (char c : keySet) {
-            resultMap.put(c, startValue);
-            startValue--;
+        int startResult = 9;
+        for (Character c : tmpList) {
+            resMap.put(c, startResult);
+            startResult --;
         }
-        List<Integer> result = new ArrayList<>();
 
-        for (String word : wordList) {
+        List<Integer> tmpIntegerRes = new ArrayList<>();
+        for(String list : lists){
             StringBuilder sb = new StringBuilder();
-            char[] wordC = word.toCharArray();
-            for (int i = 0; i < wordC.length; i++) {
-                Integer res = resultMap.get(wordC[i]);
-                sb.append(String.valueOf(res));
+            char[] tmpCh = list.toCharArray();
+
+            for(int i=0; i<tmpCh.length; i++){
+                Integer integer = resMap.get(tmpCh[i]);
+                sb.append(String.valueOf(integer));
             }
-            result.add(Integer.parseInt(sb.toString()));
+            tmpIntegerRes.add(Integer.valueOf(sb.toString()));
         }
         int sum = 0;
-        for (Integer integer : result) {
-            sum += integer;
+
+        for (Integer tmpIntegerRe : tmpIntegerRes) {
+            sum+=tmpIntegerRe;
         }
         System.out.println(sum);
+
+
     }
 
 }

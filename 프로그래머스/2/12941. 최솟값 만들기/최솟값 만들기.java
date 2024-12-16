@@ -1,18 +1,25 @@
 import java.util.*;
 
+
 class Solution
 {
-    public int solution(int []A, int []B){
+    public int solution(int []A, int []B)
+    {
         int answer = 0;
+        List<Integer> aList = new ArrayList<>();
+        List<Integer> bList = new ArrayList<>();
         
-        Arrays.sort(A);
-        Arrays.sort(B);
-            
         for (int i=0; i<A.length; i++) {
-            answer += (A[i] * B[B.length-1-i]);
+            aList.add(A[i]);
+            bList.add(B[i]);
         }
         
-
+        Collections.sort(aList);
+        Collections.sort(bList, Collections.reverseOrder());
+        
+        for (int i=0; i<aList.size(); i++) {
+            answer += (aList.get(i) * bList.get(i));
+        }
         return answer;
     }
 }

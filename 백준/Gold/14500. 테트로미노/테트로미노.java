@@ -35,33 +35,29 @@ public class Main {
                 visited[i][j] = true;
                 dfs(i, j, 1, arr[i][j]);
                 visited[i][j] = false;
-                anotherCase(i, j);
+                anotherCase(i, j, 0, 0, arr[i][j]);
             }
         }
         System.out.println(currentMax);
     }
 
-    public static void anotherCase(int x, int y) {
-        int sum = 0;
-
-        // 상, 하, 좌
-        if (x - 1 >= 0 && x + 1 < N && y - 1 >= 0) {
-            sum = Math.max(sum, arr[x][y] + arr[x - 1][y] + arr[x + 1][y] + arr[x][y - 1]);
-        }
-        // 상, 하, 우
-        if (x - 1 >= 0 && x + 1 < N && y + 1 < M) {
-            sum = Math.max(sum, arr[x][y] + arr[x - 1][y] + arr[x + 1][y] + arr[x][y + 1]);
-        }
-        // 상, 좌, 우
-        if (x - 1 >= 0 && y - 1 >= 0 && y + 1 < M) {
-            sum = Math.max(sum, arr[x][y] + arr[x - 1][y] + arr[x][y - 1] + arr[x][y + 1]);
+    public static void anotherCase(int x, int y, int start, int count, int sum) {
+        if (count == 3) {
+            currentMax = Math.max(currentMax, sum);
+            return;
         }
 
-        // 하, 좌, 우
-        if (x + 1 < N && y + 1 < M && y - 1 >= 0) {
-            sum = Math.max(sum, arr[x][y] + arr[x + 1][y] + arr[x][y - 1] + arr[x][y + 1]);
+        for (int i = start; i < 4; i++) {
+
+            int ndx = x + dx[i];
+            int ndy = y + dy[i];
+
+            if (ndx < 0 || ndx >= N || ndy < 0 || ndy >= M) {
+                continue;
+            }
+
+            anotherCase(x, y, i+1, count+1, sum + arr[ndx][ndy]);
         }
-        currentMax = Math.max(currentMax, sum);
     }
 
     public static void dfs(int x, int y, int count, int sum) {

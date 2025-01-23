@@ -1,49 +1,59 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public class Main {
 
-    public static boolean[] visited;
-    public static ArrayList<ArrayList<Integer>> graph = new ArrayList<ArrayList<Integer>>();
-    public static int cnt = 0;
+    static int N;
+    static int M;
+    static int count = 0;
+    static boolean[] visited;
+    static List<List<Integer>> arr = new ArrayList<>();
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int c = sc.nextInt();
-        int k = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
+        M = Integer.parseInt(br.readLine());
+        visited = new boolean[N+1];
+        visited[1] = true;
 
-        visited = new boolean[c + 1];
-
-        for (int i = 0; i <= c; i++) {
-            graph.add(new ArrayList<>());
+        // arr 초기화
+        for (int i=0; i<=N; i++) {
+            arr.add(new ArrayList<>());
         }
 
-        for (int i = 0; i < k; i++) {
-            int x = sc.nextInt();
-            int y = sc.nextInt();
-             graph.get(x).add(y);
-                graph.get(y).add(x);
-            }
-
-        for (int i = 0; i < c; i++) {
-            Collections.sort(graph.get(i));
+        for (int i=1; i<=M; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int start = Integer.parseInt(st.nextToken());
+            int end = Integer.parseInt(st.nextToken());
+            arr.get(start).add(end);
+            arr.get(end).add(start);
         }
-
-        dfs(1);
-        System.out.println(cnt - 1);
-
+        bfs();
+        System.out.println(count);
     }
 
-    static void dfs(int node) {
-        visited[node] = true;
-        cnt++;
+    public static void bfs() {
+        Queue<Integer> q = new ArrayDeque<>();
+        List<Integer> connects = arr.get(1);
+        for (int connect : connects) {
+            q.offer(connect);
+            visited[connect] = true;
+        }
 
-        for (int i : graph.get(node)) {
-            if (!visited[i]) {
-                dfs(i);
+        while (!q.isEmpty()) {
+            count ++;
+            Integer poll = q.poll();
+
+            List<Integer> cn = arr.get(poll);
+
+            for (int c : cn) {
+                if (visited[c] == false) {
+                    q.offer(c);
+                    visited[c] = true;
+                }
             }
         }
     }
-
 }

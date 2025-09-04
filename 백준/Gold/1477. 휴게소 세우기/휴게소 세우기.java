@@ -1,51 +1,63 @@
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
+    static int N,M,L;
+    static int[] arr;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-    static int M;
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        L = Integer.parseInt(st.nextToken());
+        arr = new int[N+1];
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        M = sc.nextInt();
-        int L = sc.nextInt();
-
-        int[] arr = new int[N + 2];
-        arr[0] = 0;  // 시작점
-        for (int i = 1; i <= N; i++) {
-            arr[i] = sc.nextInt();
+        st = new StringTokenizer(br.readLine());
+        for(int i=0; i<N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
         }
-        arr[N + 1] = L;  // 끝점
-
+        arr[N] = L;
         Arrays.sort(arr);
 
-        int start = 1;
-        int end = L - 1;
+        int low = 0;
+        int high = L;
 
-        // 이분 탐색: 최소 최대 간격 찾기
-        while (start + 1 < end) {
-            int mid = (start + end) / 2;
-            if (check(arr, mid)) { // mid 가능 → 더 작은 값 시도
-                end = mid;
-            } else {               // mid 불가능 → 더 큰 값 시도
-                start = mid;
+        while (low + 1 < high) {
+            int mid = (low + high) / 2;
+
+            if(check(mid)) {
+                high = mid;
+            }else {
+                low = mid;
             }
         }
-
-        // 종료 후 start와 end 중 최소값 결정
-        int ans = check(arr, start) ? start : end;
-        System.out.println(ans);
+//        check(300);
+        System.out.println(high);
     }
 
-    // mid 간격으로 휴게소를 추가할 때 M개 이하로 가능한지 확인
-    private static boolean check(int[] arr, int mid) {
+    private static boolean check(int target) {
+        // target은 휴게소가 없는 구간의 최대길이
         int cnt = 0;
-        for (int i = 0; i < arr.length - 1; i++) {
-            int gap = arr[i + 1] - arr[i];
-            cnt += (gap - 1) / mid;  // 추가 휴게소 개수
+        int index = 0;
+        int prevPos = 0;
+        while (index <= N) {
+//            System.out.println("arr[index] - prevPos = " + (arr[index] - prevPos) + " target = " + target);
+            if(arr[index] - prevPos <= target) {
+                prevPos = arr[index];
+                index++;
+            }else {
+                prevPos += target;
+                cnt++;
+                while (arr[index] <= prevPos) {
+                    index++;
+                }
+            }
         }
+//        System.out.println("cnt = " + cnt);
         return cnt <= M;
     }
 }

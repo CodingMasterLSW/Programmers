@@ -1,16 +1,16 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
-public class Main {
+class Main {
 
-    static int N;
     static int M;
-    static int[] dx = {0,0,-1,1};
-    static int[] dy = {-1,1,0,0};
+    static int N;
     static int[][] graph;
-    static int currentMax = 1;
     static boolean[][] visited;
-    static List<int[]> starts = new ArrayList<>();
+    static int count = 0;
+
+    static int[] dc = {0, 0, -1, 1};
+    static int[] dr = {-1, 1, 0, 0};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -21,61 +21,66 @@ public class Main {
         graph = new int[N][M];
         visited = new boolean[N][M];
 
-        for(int i=0; i<N; i++){
+        for (int i=0; i<N; i++) {
             st = new StringTokenizer(br.readLine());
-            for(int j=0; j<M; j++){
-                graph[i][j] = Integer.parseInt(st.nextToken());
-                if(graph[i][j] == 1){
-                   starts.add(new int[]{i,j});
-                   visited[i][j] = true;
-                }
-            }
-        }
-        bfs(starts);
 
-        int res = 0;
-        for(int i=0; i<N; i++){
-            for(int j=0; j<M; j++){
-                if(graph[i][j] == 0){
-                    res++;
+            for (int j=0; j<M; j++) {
+                graph[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
+        bfs(findStart());
+        boolean hasZero = false;
+        for (int i=0; i<N; i++) {
+            for (int j=0; j<M; j++) {
+                if (graph[i][j] == 0) {
+                    hasZero = true;
+                    break;
                 }
             }
         }
-        if(res == 0){
-            System.out.println(currentMax-1);
-        } else{
+        if (hasZero) {
             System.out.println("-1");
+        } else {
+            System.out.println(count);
+        }
+
+    }
+
+    public static void bfs(Queue<int[]> q) {
+        while (!q.isEmpty()) {
+            int[] current = q.poll();
+
+            for (int i=0; i<4; i++) {
+                int ndc = current[0] + dc[i];
+                int ndr = current[1] + dr[i];
+                int day = current[2];
+
+                if (ndc < 0 || ndc >= N || ndr < 0 || ndr >= M) {
+                    continue;
+                }
+
+                if (graph[ndc][ndr] != 0 || visited[ndc][ndr]) {
+                    continue;
+                }
+
+                visited[ndc][ndr] = true;
+                graph[ndc][ndr] = 1;
+                q.offer(new int[]{ndc, ndr, day + 1});
+                count = Math.max(day + 1, count);
+            }
         }
     }
-    public static void bfs(List<int[]> starts){
-        Queue<int[]> q = new LinkedList<>(starts);
 
-        while(!q.isEmpty()){
-            int current[] = q.poll();
-            int currentX = current[0];
-            int currentY = current[1];
-
-            for(int i=0; i<4; i++){
-                int ndx = currentX + dx[i];
-                int ndy = currentY + dy[i];
-
-                if(ndx<0 || ndx>=N || ndy<0 || ndy>=M){
-                    continue;
-                }
-                if(visited[ndx][ndy] || graph[ndx][ndy]!= 0){
-                    continue;
-                }
-
-                visited[ndx][ndy] = true;
-
-                q.offer(new int[]{ndx,ndy});
-
-                graph[ndx][ndy] = graph[currentX][currentY]+1;
-                if(currentMax<graph[ndx][ndy]){
-                    currentMax = graph[ndx][ndy];
+    public static Queue<int[]> findStart(){
+        Queue<int[]> q = new ArrayDeque<>();
+        for (int i=0; i<N; i++) {
+            for (int j=0; j<M; j++) {
+                if (graph[i][j] == 1) {
+                    q.offer(new int[]{i, j, 0});
+                    visited[i][j] = true;
                 }
             }
         }
-
+        return q;
     }
 }

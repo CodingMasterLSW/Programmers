@@ -1,72 +1,49 @@
+import java.io.*;
+import java.util.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
-
-public class Main {
+class Main {
 
     static int N;
-    static int K;
-
-    static int[] count;
-    static int[] dir = {1,-1,2};
-
-    static int max = 100000;
-
+    static int M;
+    static boolean[] visited = new boolean[1000001];
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st1 = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st1.nextToken());
-        K = Integer.parseInt(st1.nextToken());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
 
-        count = new int[max+1];
-
-        bfs(N);
+        System.out.println(bfs(N));
     }
 
+    public static int bfs(int start) {
+        Queue<int[]> q = new ArrayDeque<>();
+        q.offer(new int[]{start, 0});
 
-    static void bfs(int n){
-        boolean[] visited = new boolean[max+1];
-        Queue<Integer> q = new LinkedList<>();
+        while(!q.isEmpty()) {
+            int[] currentInfos = q.poll();
+            int currentLocation = currentInfos[0];
+            int currentTime = currentInfos[1];
 
-        q.add(n);
-        count[n] = 0;
-        visited[n] = true;
-
-        while(!q.isEmpty()){
-
-            int currentLocation = q.poll();
-            if(currentLocation==K){
-                System.out.println(count[currentLocation]);
-                return;
+            if (currentLocation == M) {
+                return currentTime;
             }
 
-            for(int i=0; i<3; i++){
-                int nextLocation;
+            if (currentLocation + 1 >= 0 && !visited[currentLocation + 1]) {
+                q.offer(new int[]{currentLocation + 1, currentTime + 1});
+                visited[currentLocation + 1] = true;
+            }
+            if (currentLocation - 1 >= 0 && !visited[currentLocation - 1]) {
+                q.offer(new int[]{currentLocation - 1, currentTime + 1});
+                visited[currentLocation - 1] = true;
+            }
 
-                if(i==2){
-                    nextLocation = currentLocation * dir[i];
-                } else{
-                    nextLocation = currentLocation + dir[i];
-                }
-
-                if(nextLocation<0 || nextLocation>max){
-                    continue;
-                }
-
-                if(!visited[nextLocation]){
-                    visited[nextLocation] = true;
-                    q.add(nextLocation);
-
-                    count[nextLocation] = count[currentLocation]+1;
-                }
+            if (currentLocation * 2 >= 0 && currentLocation * 2 <=100_000 && !visited[currentLocation * 2]) {
+                q.offer(new int[]{currentLocation * 2, currentTime + 1});
+                visited[currentLocation * 2] = true;
             }
         }
 
+        return -1;
     }
-
 }

@@ -34,15 +34,19 @@ class Main {
                 visited[currentLocation * 2] = true;
             }
             
-            if (currentLocation + 1 <= 200000 && currentLocation - 1 >= 0 && !visited[currentLocation - 1]) {
+           
+            
+            if (currentLocation - 1 >= 0 && !visited[currentLocation - 1]) {
                 q.addLast(new int[]{currentLocation - 1, currentTime + 1});
                 visited[currentLocation - 1] = true;
             }
-
-            if (currentLocation + 1 <= 200000 && currentLocation + 1 >= 0 && !visited[currentLocation + 1]) {
+            
+            if (currentLocation + 1 <= 200000 && !visited[currentLocation + 1]) {
                 q.addLast(new int[]{currentLocation + 1, currentTime + 1});
                 visited[currentLocation + 1] = true;
             }
+
+ 
             
         }
 

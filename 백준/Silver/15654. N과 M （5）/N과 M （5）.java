@@ -1,47 +1,49 @@
+import java.io.*;
 import java.util.*;
 
-public class Main {
+class Main {
 
     static int N;
     static int M;
-    static boolean[] visited;
+    static int[] result;
     static int[] arr;
+    static boolean[] visited;
     static StringBuilder sb = new StringBuilder();
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt();
-        M = sc.nextInt();
-
-        visited = new boolean[N];
-
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
         arr = new int[N];
-        for(int i=0; i<N; i++){
-            arr[i] = sc.nextInt();
+        result = new int[M];
+        visited = new boolean[N+1];
+
+        st = new StringTokenizer(br.readLine());
+        for (int i=0; i<N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
         }
         Arrays.sort(arr);
-        int[] resources = new int[M];
-        backtracking(N, M, visited, resources, 0);
+
+        recursion(0);
         System.out.println(sb.toString());
     }
-    public static void backtracking(int n, int m, boolean[]visited, int[] resources, int depth){
-        if(depth==M){
-            for(int i=0; i<M; i++){
-                sb.append(resources[i]+" ");
+
+    public static void recursion(int depth) {
+        if (M == depth) {
+            for (int a : result) {
+                sb.append(a + " ");
             }
-            sb.append("\n");
+            sb.append("\n"); 
             return;
         }
 
-
-        for(int i=0; i<N; i++){
-            if(!visited[i]){
+        for (int i=0; i<arr.length; i++) {
+            if (!visited[i]) {
                 visited[i] = true;
-                resources[depth] = arr[i];
-                backtracking(n, m, visited, resources, depth+1);
+                result[depth] = arr[i];
+                recursion(depth + 1);
                 visited[i] = false;
             }
         }
     }
-
 }

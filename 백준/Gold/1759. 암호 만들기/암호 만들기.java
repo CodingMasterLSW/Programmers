@@ -1,54 +1,55 @@
+import java.io.*;
 import java.util.*;
 
-public class Main {
-
+class Main {
     static int N;
     static int M;
-    static char[] arr;
+    static String[] result;
+    static String[] arr;
+    static List<String> vowel = List.of("a", "i", "e", "o", "u");
     static StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt();
-        M = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        arr = new char[M];
-        for (int i = 0; i < M; i++) {
-            arr[i] = (sc.next()).charAt(0);
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+
+        result = new String[N];
+        arr = new String[M];
+        st = new StringTokenizer(br.readLine());
+        for (int i=0; i<M; i++) {
+            arr[i] = st.nextToken();
         }
         Arrays.sort(arr);
-
-        char[] resources = new char[N];
-        backtracking(0, resources, 0);
-        
-        System.out.print(sb.toString());
+        recursion(0, 0);
+        System.out.println(sb.toString());
     }
 
-    public static void backtracking(int depth, char[] resources, int start) {
-
-        if (N == depth) {
-            int aCount = 0;
-            int bCount = 0;
-            for (int i = 0; i < N; i++) {
-                if (resources[i] == 'a' || resources[i] == 'e' || resources[i] == 'i'
-                        || resources[i] == 'o' || resources[i] == 'u') {
-                    aCount++;
+    public static void recursion(int depth, int start) {
+        if (depth == N) {
+            int v = 0;
+            int c = 0;
+            for (String r : result) {
+                if (vowel.contains(r)) {
+                    v++;
                 } else {
-                    bCount++;
+                    c++;
                 }
             }
-            if (aCount >= 1 && bCount >= 2) {
-                for (int i = 0; i < N; i++) {
-                    sb.append(resources[i]);
+            if (v >= 1 && c >=2) {
+                for (String r : result) {
+                    sb.append(r);
                 }
                 sb.append("\n");
             }
             return;
         }
-        for (int i = start; i < M; i++) {
-            resources[depth] = arr[i];
-            backtracking(depth + 1, resources, i+1);
 
+        for (int i=start; i<M; i++) {
+            result[depth] = arr[i];
+            recursion(depth + 1, start+=1);
         }
     }
 }

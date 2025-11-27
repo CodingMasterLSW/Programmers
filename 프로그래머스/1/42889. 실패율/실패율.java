@@ -23,11 +23,29 @@ class Solution {
             currentValue -= maps.get(i);
         }
         
-        return result.entrySet().stream()
-        .sorted((e1, e2) -> Double.compare(e2.getValue(), e1.getValue())) 
-        .map(Map.Entry::getKey)                                           
-        .mapToInt(Integer::intValue)                                       
-        .toArray();
+        System.out.println(result);
+        
+        int[] arr = new int[N];
+        
+        int idx = 0;
+        
+        while(idx != N) {
+            int maxKey = 0;
+            double maxValue = -0.1;
+            for (int i=1; i<=N; i++) {
+                if (result.get(i) == null) {
+                    continue;
+                }
+                if (result.get(i) > maxValue) {
+                    maxValue = result.get(i);
+                    maxKey = i;
+                }
+            }
+            result.remove(maxKey);
+            arr[idx] = maxKey;
+            idx++;
+        }
+        return arr;
     }
     
     public static Map<Integer, Integer> init(int N) {

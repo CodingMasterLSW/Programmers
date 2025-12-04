@@ -9,9 +9,9 @@ class Main {
 
     static int N;
     static int[][] field;
-    static int[][] arr = new int[3][2];
     static boolean[][] visited;
     static int minValue = Integer.MAX_VALUE;
+    static int currentCost = 0;
 
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
@@ -32,18 +32,11 @@ class Main {
         System.out.println(minValue);
     }
     public static void backtracking(int depth) {
+        if (currentCost > minValue) {
+            return;
+        }
         if (depth == 3) {
-            int sum = 0;
-            for (int i=0; i<3; i++) {
-                int[] currentLocation = arr[i];
-                sum += field[currentLocation[0]][currentLocation[1]];
-                for (int a = 0; a < 4; a ++) {
-                    int nx = currentLocation[0] + dx[a];
-                    int ny = currentLocation[1] + dy[a];
-                    sum += field[nx][ny];
-                }
-            }
-            minValue = Math.min(sum, minValue);
+            minValue = Math.min(currentCost, minValue);
             return;
         }
 
@@ -57,9 +50,11 @@ class Main {
                     continue;
                 }
                 changeVisited(i,j);
-                arr[depth] = new int[]{i,j};
+                int cal = calculateSum(i,j);
+                currentCost += cal;
                 backtracking(depth + 1);
                 changeNotVisited(i,j);
+                currentCost -= cal;
             }
         }
     }
@@ -80,12 +75,23 @@ class Main {
         return true;
     }
 
+    public static int calculateSum(int x, int y) {
+        int sum = 0;
+        sum += field[x][y];
+        for (int a = 0; a < 4; a ++) {
+            int nx = x + dx[a];
+            int ny = y + dy[a];
+            sum += field[nx][ny];
+        }
+        
+        return sum;
+    }
+
     public static void changeVisited(int x, int y) {
         visited[x][y] = true;
         for (int i=0; i<4; i++) {
             int ndx = x + dx[i];
             int ndy = y + dy[i];
-
             visited[ndx][ndy] = true;
         }
     }
@@ -95,7 +101,6 @@ class Main {
         for (int i=0; i<4; i++) {
             int ndx = x + dx[i];
             int ndy = y + dy[i];
-
             visited[ndx][ndy] = false;
         }
     }

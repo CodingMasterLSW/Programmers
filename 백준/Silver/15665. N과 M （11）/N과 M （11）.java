@@ -1,48 +1,51 @@
+import java.io.*;
 import java.util.*;
 
-public class Main {
-
+class Main {
+    
     static int N;
     static int M;
+    static int[] result;
     static int[] arr;
-    static StringBuilder sb;
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt();
-        M = sc.nextInt();
+    static StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
         arr = new int[N];
-        sb = new StringBuilder();
+        result = new int[M];
 
-        for (int i = 0; i < N; i++) {
-            arr[i] = sc.nextInt();
+        st = new StringTokenizer(br.readLine());
+        for (int i=0; i<N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
         }
 
         Arrays.sort(arr);
-
-        int[] resources = new int[M];
-        backtracking(N, M, resources, 0);
+        backtracking(0);
         System.out.println(sb.toString());
-
     }
 
-    public static void backtracking(int n, int m, int[] resources, int depth) {
-        if (M == depth) {
-            for (int i = 0; i < M; i++) {
-                sb.append(resources[i] + " ");
+    public static void backtracking(int depth) {
+        // 종료조건
+        if (depth == M) {
+            for (int i=0; i<M; i++) {
+                sb.append(result[i] + " ");
             }
             sb.append("\n");
             return;
         }
-        Set<Integer> used = new HashSet<>();
-        for (int i = 0; i < N; i++) {
-            if (!used.contains(arr[i])) {
-                resources[depth] = arr[i];
-                backtracking(N, M, resources, depth + 1);
-                used.add(arr[i]);
+    
+        for (int i=0; i<arr.length; i++) {
+            // 이미 방문했니?
+        
+            // 앞을 이미 방문하고, 값이 같다면 pass
+            if (i > 0 && arr[i-1] == arr[i]) {
+                continue;
             }
-
+            result[depth] = arr[i];
+            backtracking(depth + 1);
         }
-    }
 
+    }
 }

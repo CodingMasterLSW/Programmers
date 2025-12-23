@@ -1,55 +1,52 @@
 import java.util.*;
 
 class Solution {
-    
+        
     public int solution(String str1, String str2) {
-        Map<String, Integer> cal1 = calculate(str1);
-        Map<String, Integer> cal2 = calculate(str2);
-                
-        if (cal1.size() == 0 && cal2.size() == 0) {
+        Map<String, Integer> result1 = cal(str1);
+        Map<String, Integer> result2 = cal(str2);
+        
+        if (result1.isEmpty() && result2.isEmpty()) {
             return 65536;
         }
         
-        Set<String> all = new HashSet<>();
+        Set<String> arr = new HashSet<>();
         
-        all.addAll(cal1.keySet());
-        all.addAll(cal2.keySet());
+        arr.addAll(result1.keySet());
+        arr.addAll(result2.keySet());
+                
+        int x = 0;
+        int y = 0;
         
-        int intersaction = 0;
-        int union = 0;
-        for (String a : all) {
-            int x = cal1.getOrDefault(a, 0);
-            int y = cal2.getOrDefault(a, 0);
-            
-            intersaction += Math.min(x, y);
-            union += Math.max(x, y);
+        for(String a : arr) {
+            x += Math.min(result1.getOrDefault(a, 0), result2.getOrDefault(a, 0));
+            y += Math.max(result1.getOrDefault(a, 0), result2.getOrDefault(a, 0));
         }
     
-        int value = (int) (((double) intersaction / union) * 65536);
-        return value;
+        return (int)(((double) x / y) * 65536);
+    
     }
     
-    private Map<String, Integer> calculate(String str) {
+    private Map<String, Integer> cal(String str) {
         String lowerStr = str.toLowerCase();
-        Map<String,Integer> group = new HashMap<>();
-    
-        for (int i=0; i<str.length()-1; i++) {
+        Map<String, Integer> tmp = new HashMap<>();
+        
+        for (int i=0; i<lowerStr.length() -1; i++) {
             StringBuilder sb = new StringBuilder();
+            
             char a = lowerStr.charAt(i);
             char b = lowerStr.charAt(i+1);
+            
             if (isValid(a) && isValid(b)) {
                 sb.append(a).append(b);
-                String key = sb.toString();
-                group.put(key, group.getOrDefault(key, 0) + 1);
+                tmp.put(sb.toString(), tmp.getOrDefault(sb.toString(), 0) + 1);
             }
-        }        
-        return group;
+        }
+        return tmp;
+        
     }
     
     private boolean isValid(char c) {
-        if ('a' <= c && c <= 'z') {
-            return true;
-        }
-        return false;
+        return 'a' <= c && c <= 'z';
     }
 }

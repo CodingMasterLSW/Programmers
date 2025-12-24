@@ -6,7 +6,6 @@ class Main {
     static int N;
     static int M;
     static char[][] graph;
-    static boolean[][] visited;
     static Set<Character> histories;
     static int maxValue = 0;
 
@@ -29,14 +28,17 @@ class Main {
         }
         histories = new HashSet<>();
         histories.add(graph[0][0]);
-        visited = new boolean[N][M];
-        visited[0][0] = true;
         backtracking(0,0);
         System.out.println(maxValue);
     }
 
     public static void backtracking(int x, int y) {
         maxValue = Math.max(maxValue, histories.size());
+
+        // 조기 종료 (최적화)
+        if (histories.size() == 26) {
+            return;
+        }
 
         for (int i=0; i<4; i++) {
             int ndx = x + dx[i];
@@ -45,19 +47,13 @@ class Main {
             if (ndx < 0 || ndx >= N || ndy < 0 || ndy >= M) {
                 continue;
             }
-            
-            if (visited[ndx][ndy]) {
-                continue;
-            }
 
             if (histories.contains(graph[ndx][ndy])) {
                 continue;
             }
 
-            visited[ndx][ndy] = true;
             histories.add(graph[ndx][ndy]);
             backtracking(ndx, ndy);
-            visited[ndx][ndy] = false;
             histories.remove(graph[ndx][ndy]);
         }
     }

@@ -8,7 +8,7 @@ class Main {
     static int[] arr;
     static boolean[] visited;
     static int[] current;
-    static List<Integer> result = new ArrayList<>();
+    static Set<Integer> result = new HashSet<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -49,9 +49,9 @@ class Main {
             if (visited[i]) {
                 continue;
             }
-            // if (i>0 && (!visited[i] && (!visited[i-1])) && arr[i] == arr[i-1]) {
-            //     continue;
-            // }
+            if (i>0 && (!visited[i] && (!visited[i-1])) && arr[i] == arr[i-1]) {
+                continue;
+            }
 
             visited[i] = true;
             current[depth] = arr[i];

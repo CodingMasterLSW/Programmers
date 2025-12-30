@@ -6,7 +6,7 @@ class Main {
     static int N;
     static int M;
     static int[] arr;
-    static int maxCount = 0;
+    static int maxValue = 0;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -25,27 +25,25 @@ class Main {
 
         int startIdx = 0;
         int endIdx = 0;
-        int count = 0;
 
         Map<Integer, Integer> histories = new HashMap<>();
-
+        
         while(endIdx < N) {
             histories.put(arr[endIdx], histories.getOrDefault(arr[endIdx], 0) + 1);
 
             if (histories.get(arr[endIdx]) > M) {
+
                 while (true) {
-                    histories.put(arr[startIdx], histories.get(arr[startIdx]) - 1);
-                    startIdx++;
-                    count--;
                     if (histories.get(arr[endIdx]) <= M) {
                         break;
                     }
+                    histories.put(arr[startIdx], histories.get(arr[startIdx]) - 1);
+                    startIdx++;
                 }
-            } 
-            count++;
-            maxCount = Math.max(maxCount, count);
-            endIdx++;
+            }
+            endIdx ++;
+            maxValue = Math.max(maxValue, endIdx - startIdx);
         }
-        System.out.println(maxCount);
+        System.out.println(maxValue);
     }
 }

@@ -1,40 +1,49 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
+class Main {
 
+    static int N;
+    static int S;
+    static int[] arr;
+    static int minValue = Integer.MAX_VALUE;
+    
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int length = Integer.parseInt(st.nextToken());
-        int N = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
+        S = Integer.parseInt(st.nextToken());
+        
+        arr = new int[N+1];
 
-        int[] arr = new int[length + 1];
         st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < length; i++) {
+
+        for (int i=0; i<N; i++) {
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        int start = 0;
-        int end = 0;
+        int startIdx = 0;
+        int endIdx = 0;
         int sum = 0;
-        int min = Integer.MAX_VALUE;
-        while (end <= length) {
-            if (sum < N) {
-                sum += arr[end++];
-            } else if (sum >= N) {
-                sum -= arr[start++];
-            }
-            if (sum >= N) {
-                min = Math.min(min, (end - start));
+
+        while(endIdx <= N) {
+            if (sum < S) {
+                sum += arr[endIdx];
+                endIdx ++;
+            } else if (sum >= S) {
+                sum -= arr[startIdx];
+                startIdx++; 
             }
 
+            if (sum >= S) {
+                minValue = Math.min(minValue, (endIdx - startIdx));
+            }
         }
-        if (min == Integer.MAX_VALUE) {
+
+        if (minValue == Integer.MAX_VALUE) {
             System.out.println(0);
-        } else {
-            System.out.println(min);
+            return;
         }
+        System.out.println(minValue);
     }
-
 }

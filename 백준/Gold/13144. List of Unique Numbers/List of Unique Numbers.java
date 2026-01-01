@@ -22,22 +22,23 @@ class Main {
         int endIdx = 0;
         long sum = 0;
 
-        Map<Integer, Integer> histories = new HashMap<>();
+        int[] histories = new int[100005];
 
         while(endIdx < N) {
-            histories.put(arr[endIdx], histories.getOrDefault(arr[endIdx], 0) + 1 );
+    
+            histories[arr[endIdx]] = histories[arr[endIdx]] + 1;
 
-            int currentValue = histories.get(arr[endIdx]);
+            int currentValue = histories[arr[endIdx]];
 
             endIdx++;
 
             if (currentValue > 1) {
                 while(true) {
-                    if (histories.get(arr[endIdx-1]) <= 1) {
+                    if (histories[arr[endIdx -1]] <= 1) {
                         sum += endIdx - startIdx;
                         break;
                     }
-                    histories.put(arr[startIdx], histories.get(arr[startIdx]) - 1);
+                    histories[arr[startIdx]] = histories[arr[startIdx]]-1;
                     startIdx ++;
                 }
             } else {

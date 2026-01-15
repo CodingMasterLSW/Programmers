@@ -19,7 +19,7 @@ class Main {
 
         for (int i=0; i<N; i++) {
             if (arr.get(i) - i < 0) {
-                continue;
+                break;
             } else {
                 sum += arr.get(i) - i;
             }

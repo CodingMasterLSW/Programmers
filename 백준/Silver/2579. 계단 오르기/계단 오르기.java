@@ -1,32 +1,34 @@
 import java.io.*;
+import java.util.*;
 
-public class Main {
+class Main {
 
+    static int N;
+    static int[] dp;
+    static int[] arr;
+    
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        int n = Integer.parseInt(br.readLine());
-        int[] score = new int[n + 1];
-        for (int i = 1; i <= n; i++) {
-            score[i] = Integer.parseInt(br.readLine());
+        N = Integer.parseInt(br.readLine());
+        dp = new int[N+1];
+        arr = new int[N+1];
+ 
+        for (int i=1; i<=N; i++) {
+            arr[i] = Integer.parseInt(br.readLine());
         }
 
-        // dp 배열 초기화
-        int[] dp = new int[n + 1];
+        dp[1] = arr[1];
 
-        if (n >= 1) dp[1] = score[1];
-        if (n >= 2) dp[2] = score[1] + score[2];
-        if (n >= 3) {
-            dp[3] = Math.max(score[1] + score[3], score[2] + score[3]);
+        if (N >=2) {
+            dp[2] = arr[1] + arr[2];
         }
 
-        // 점화식을 이용하여 dp 배열 채우기
-        for (int i = 4; i <= n; i++) {
-            dp[i] = Math.max(dp[i-3]+score[i-1]+score[i], dp[i-2]+score[i]);
-        }
 
-        // 결과 출력
-        System.out.println(dp[n]);
+        for (int i=3; i<=N; i++) {
+            dp[i] = Math.max(dp[i-3] + arr[i-1] + arr[i], dp[i-2] + arr[i]);
+        }
+        
+        System.out.println(dp[N]);
+    
     }
-
 }

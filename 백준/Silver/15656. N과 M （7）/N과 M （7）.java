@@ -1,46 +1,47 @@
+import java.io.*;
 import java.util.*;
 
-public class Main {
+class Main {
 
     static int N;
     static int M;
-    static boolean[] visited;
     static int[] arr;
+    static int[] tmpArr;
     static StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt();
-        M = sc.nextInt();
-
-        visited = new boolean[N];
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
 
         arr = new int[N];
-        for (int i = 0; i < N; i++) {
-            arr[i] = sc.nextInt();
+        tmpArr = new int[M];
+        st = new StringTokenizer(br.readLine());
+        for (int i=0; i<N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
         }
-        Arrays.sort(arr);
-        int[] resources = new int[M];
 
-        backtracking(N, M, visited, resources, 0);
+        Arrays.sort(arr);
+        
+        backtracking(0);
+        
         System.out.println(sb.toString());
     }
 
-    public static void backtracking(int n, int m, boolean[] visited, int[] resources, int depth) {
+    public static void backtracking(int depth) {
+        // 종료 조건
         if (depth == M) {
-            for (int i = 0; i < M; i++) {
-                sb.append(resources[i] + " ");
+            for (int i=0; i<M; i++) {
+                sb.append(tmpArr[i]).append(" ");
             }
             sb.append("\n");
             return;
         }
 
-        for (int i = 0; i < N; i++) {
-
-            resources[depth] = arr[i];
-            backtracking(n, m, visited, resources, depth + 1);
+        for (int i=0; i<N; i++) {
+            tmpArr[depth] = arr[i];
+            backtracking(depth + 1);
         }
     }
 }
-
-

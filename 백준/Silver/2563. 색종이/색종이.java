@@ -1,39 +1,34 @@
+import java.io.*;
 import java.util.*;
 
-public class Main {
+class Main {
 
-    public static void main(String[] args) {
+    static boolean[][] graph = new boolean[105][105];
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int[][] canvas = new int[100][100];
+        int box = Integer.parseInt(br.readLine());
 
-        Scanner sc = new Scanner(System.in);
+        for (int i=0; i<box; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
 
-
-        int N = sc.nextInt();
-
-        for(int i=0; i<N; i++){
-            int x = sc.nextInt();
-            int y = sc.nextInt();
-
-
-            for(int m = x; m<x+10; m++){
-
-                for(int n = y; n<y+10; n++){
-                    canvas[m][n] = 1;
+            for (int j = a; j < a + 10; j++) {
+                for (int z = b; z < b + 10; z ++) {
+                    graph[j][z] = true;
                 }
             }
         }
-        int cnt = 0;
-        for(int i=0; i<100; i++){
-            for(int j=0; j<100; j++){
-                if(canvas[i][j]==1){
-                    cnt++;
+        
+        int count = 0;
+        for(int i=0; i<100; i++) {
+            for (int j=0; j<100; j++) {
+                if (graph[i][j] == true) {
+                    count++;
                 }
             }
         }
-        System.out.println(cnt);
-
-
+        System.out.println(count);
     }
-
 }

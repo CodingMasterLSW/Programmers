@@ -1,67 +1,51 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
-public class Main {
-
+class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int price = Integer.parseInt(br.readLine());
+        int K = Integer.parseInt(br.readLine());
 
-        List<int[]> lists = new ArrayList<>();
+        int[] dirs = new int[6];
+        int[] lens = new int[6];
 
-        for (int i = 0; i < 6; i++) {
+        for (int i=0; i<6; i++) { 
             StringTokenizer st = new StringTokenizer(br.readLine());
-            int[] arr = new int[2];
-            arr[0] = Integer.parseInt(st.nextToken());
-            arr[1] = Integer.parseInt(st.nextToken());
-            lists.add(arr);
+            dirs[i] = Integer.parseInt(st.nextToken());
+            lens[i] = Integer.parseInt(st.nextToken());
         }
+    
 
-        int maxIdx1 = 0;
-        int maxIdx2 = 0;
-        int max1 = 0;
-        int max2 = 0;
+        int maxX = 0;
+        int maxXIdx = -1;
+        int maxY = 0;
+        int maxYIdx = -1;
 
-        for (int i = 0; i < 6; i++) {
-            if (lists.get(i)[0] == 1 || lists.get(i)[0] == 2) {
-                if (lists.get(i)[1] > max1) {
-                    max1 = lists.get(i)[1];
-                    maxIdx1 = i;
+        for (int i=0; i<6; i++) {
+            if (dirs[i] == 1 || dirs[i] == 2) {
+                if (lens[i] > maxX) {
+                    maxX = lens[i];
+                    maxXIdx = i;
                 }
             } else {
-                if(lists.get(i)[1] > max2){
-                    max2 = lists.get(i)[1];
-                    maxIdx2 = i;
+                if (lens[i] > maxY) {
+                    maxY = lens[i];
+                    maxYIdx = i;
                 }
             }
         }
+        int maxSqure = maxX * maxY;
 
-        int sLength = 0;
-        int sWidth = 0;
 
-        if(maxIdx1 == 0){
-            sLength = Math.abs(lists.get(1)[1] - lists.get(5)[1]);
-        } else if (maxIdx1 == 5){
-            sLength = Math.abs(lists.get(4)[1] - lists.get(0)[1]);
-        } else{
-            sLength = Math.abs(lists.get(maxIdx1-1)[1] - lists.get(maxIdx1+1)[1]);
-        }
+        // 0의 경우, 끝 인덱스로 가야한다.
+        // 마지막 인덱스의 경우, 0으로 가야한다.
 
-        if(maxIdx2 == 0){
-            sWidth = Math.abs(lists.get(1)[1] - lists.get(5)[1]);
-        } else if (maxIdx2 == 5){
-            sWidth = Math.abs(lists.get(4)[1] - lists.get(0)[1]);
-        } else{
-            sWidth = Math.abs(lists.get(maxIdx2-1)[1] - lists.get(maxIdx2+1)[1]);
-        }
 
-        int minSquare = sWidth * sLength;
+        int minX = Math.abs((lens[(maxXIdx -1 + 6) % 6] - lens[(maxXIdx + 1 + 6) % 6]));
+        int minY = Math.abs((lens[(maxYIdx -1 + 6) % 6] - lens[(maxYIdx + 1 + 6) % 6]));
 
-        int square = max1 * max2;
+        int minSqure = minX * minY;
 
-        int finalSquare = (square - minSquare)* price;
-
-        System.out.println(finalSquare);
+        System.out.println((maxSqure - minSqure) * K);
     }
-
 }

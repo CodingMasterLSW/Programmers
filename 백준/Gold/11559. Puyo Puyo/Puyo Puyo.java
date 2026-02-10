@@ -4,116 +4,103 @@ import java.util.*;
 class Main {
 
     static char[][] graph = new char[12][6];
-    static boolean[][] visited = new boolean[12][6];
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, -1, 1};
-    static List<int[]> tmpGraph = new ArrayList<>();
-    static int cnt = 0;
+    static boolean[][] visited;
+    static List<int[]> visitedHistory;
+
+    static int[] r = {-1, 1, 0, 0};
+    static int[] c = {0, 0, -1, 1};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
+
         for (int i=0; i<12; i++) {
-            st = new StringTokenizer(br.readLine());
-            String s = st.nextToken();
+            String s = br.readLine();
             for (int j=0; j<6; j++) {
                 graph[i][j] = s.charAt(j);
             }
         }
-        moveGraph();
-        
-        while(true) {
-            // System.out.println("몇 번 실행?");
+
+        int totalCount = 0;
+
+        boolean flag = true;
+        while (flag) {
+            flag = false;
             visited = new boolean[12][6];
-            boolean fang = false;
             for (int i=0; i<12; i++) {
                 for (int j=0; j<6; j++) {
-                    if (graph[i][j] != '.' && !visited[i][j]) {
-                        bfs(new int[]{i, j, 0});
-                        if (tmpGraph.size() < 4) {
-                            tmpGraph.clear();
-                        } else {
-                            fang = true;
-                            for (int[] a : tmpGraph) {
-                                graph[a[0]][a[1]] = '.';
-                            }
-                            tmpGraph.clear();
+                    if (graph[i][j] == '.' || visited[i][j]){
+                        continue;
+                    }
+                    visitedHistory = new ArrayList<>();
+                    visitedHistory.add(new int[]{i, j});
+                    bfs(new int[]{i, j});
+
+                    if (visitedHistory.size() >= 4) {
+                        flag = true;
+                        for (int[] history : visitedHistory) {
+                            int row = history[0];
+                            int column = history[1];
+                            graph[row][column] = '.';
                         }
                     }
-
                 }
             }
-            if (fang) {
-                cnt++;
-                moveGraph();
-
-                // System.out.println("그래프 정렬 후");
-
-                // for (int i=0; i<12; i++) {
-                //     for (int j=0; j<6; j++) {
-                //         System.out.print(graph[i][j]);
-                //     }
-                //     System.out.println();
-                // }
-                // System.out.println();
-            } else {
+            if (!flag) {
                 break;
             }
+            down();
+            totalCount ++;
         }
-        System.out.println(cnt);
-
+        System.out.println(totalCount);
     }
 
-    public static void moveGraph() {
+    // 역순으로 가야할듯? 
+    public static void down() {
         for (int i=11; i>=0; i--) {
-            for (int j=0; j<6; j++) {
-                if (graph[i][j]== '.') {
+            for (int j=5; j>=0; j--) {
+                if (graph[i][j] == '.') {
                     continue;
-                } else {
-                    int cnt = i;
-                    while (true) {
-                        if (cnt +1 < 12 && graph[cnt+1][j] == '.') {
-                            graph[cnt+1][j] = graph[cnt][j];
-                            graph[cnt][j] = '.';
-                            cnt+=1;
-                        } else {
-                            break;
-                        }
+                }
+                
+                int cur = i;
+                while (true) {
+                    if (cur + 1 > 11 || graph[cur + 1][j] != '.') {
+                        break;
                     }
+                    graph[cur + 1][j] = graph[cur][j];
+                    graph[cur][j] = '.';
+                    cur++;
                 }
             }
         }
     }
 
-    public static void bfs(int[] start) {
+    public static void bfs(int[] startPoint) {
         Queue<int[]> q = new ArrayDeque<>();
-        q.offer(start);
+        q.offer(startPoint);
+        visited[startPoint[0]][startPoint[1]] = true;
+        int maxValue = 0;
 
         while (!q.isEmpty()) {
-            int current[] = q.poll();
-            int currentX = current[0];
-            int currentY = current[1];
-            int currentValue = current[2];
-        
+            int[] current = q.poll();
+
             for (int i=0; i<4; i++) {
-                int nx = currentX + dx[i];
-                int ny = currentY + dy[i];
+                int nRow = current[0] + r[i];
+                int nCol = current[1] + c[i];
 
-                if (nx < 0 || nx >= 12 || ny < 0 || ny >= 6) {
+                if (nRow < 0 || nRow >= 12 || nCol < 0 || nCol >= 6) {
+                    continue;
+                }
+                if (visited[nRow][nCol]) {
+                    continue;
+                }
+                if (graph[nRow][nCol] != graph[current[0]][current[1]]) {
                     continue;
                 }
 
-                if (graph[nx][ny] == '.') {
-                    continue;
-                }
-
-                if (visited[nx][ny] || graph[nx][ny] != graph[currentX][currentY]) {
-                    continue;
-                }
-
-                visited[nx][ny] = true;
-                q.offer(new int[]{nx, ny, currentValue + 1});
-                tmpGraph.add(new int[]{nx, ny});
+                visited[nRow][nCol] = true;
+                q.offer(new int[]{nRow, nCol});
+                visitedHistory.add(new int[]{nRow, nCol});
             }
         }
     }

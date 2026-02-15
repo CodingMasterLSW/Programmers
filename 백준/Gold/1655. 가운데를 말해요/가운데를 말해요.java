@@ -12,31 +12,27 @@ class Main {
         StringBuilder sb = new StringBuilder();
         
         int first = Integer.parseInt(br.readLine());
-        minHeap.offer(first);
+        maxHeap.offer(first);
         sb.append(first).append("\n");
 
         for (int i=2; i<=N; i++) {
             int current = Integer.parseInt(br.readLine());
 
-            if (minHeap.peek() <= current) {
+            if (maxHeap.peek() < current) {
                 minHeap.offer(current);
             } else {
                 maxHeap.offer(current);
             }
             // 큐 크기 조절하기
-            if (maxHeap.size() > minHeap.size()) {
+            if (maxHeap.size() > minHeap.size() + 1) {
                 minHeap.offer(maxHeap.poll());
             }
 
-            if (minHeap.size() > maxHeap.size() + 1) {
+            if (minHeap.size() > maxHeap.size()) {
                 maxHeap.offer(minHeap.poll());
             }
 
-            if (i%2 == 0) {
-                sb.append(maxHeap.peek()).append("\n");
-            } else {
-                sb.append(minHeap.peek()).append("\n");
-            }
+            sb.append(maxHeap.peek()).append("\n");
         }
         System.out.println(sb.toString());
     }

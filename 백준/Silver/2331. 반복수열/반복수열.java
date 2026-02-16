@@ -18,12 +18,14 @@ class Main {
         maps.put(dp[1], 1);
 
         for (int i=2; i<=10_000; i++) {
-            String target = String.valueOf(dp[i-1]);
+            int target = dp[i-1];
+
             int sum = 0;
-            
-            for (char t : target.toCharArray()) {
-                int value = t - '0';
-                sum += (int) Math.pow(value, P);
+
+            while (target > 0) {
+                int digit = target % 10;
+                sum += Math.pow(digit, P);
+                target /= 10;
             }
             dp[i] = sum;
             maps.put(dp[i], maps.getOrDefault(dp[i], 0) + 1);
@@ -40,4 +42,3 @@ class Main {
         System.out.println(cnt);
     }
 }
-// 나머지 연산으로 하는 코드도 이후에 짜보자.

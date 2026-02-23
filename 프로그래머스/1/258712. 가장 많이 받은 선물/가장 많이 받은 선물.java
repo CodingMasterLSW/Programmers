@@ -1,85 +1,113 @@
-// 선물 지수 = 자신이 친구들에게 준 선물의 수 - 받은 선물의 수
-// 값이 같을 경우에는, 선물 지수가 더 큰 사람 <- 선물 지수가 더 작은 사람
-// 선물 지수도 같다면, 패스
-// 다음달에 가장 많은 선물을 받는 사람의 선물의 개수 return하기
-// 문자열 분리 시, s[0] = 선물 준 사람, s[1] = 선물 받은 사람
+// Person 객체 {name, List<받은 선물>, List<준 선물>}
+// 1. 입력값 파싱 -> Person 객체에 값 저장해놓기 (clear)
+// 2. 계산 
+// - 
 
-// Person이라는 객체를 하나 만들기
-// key = muzi 
-// value = {-gives -receives}
-
-// 저거 반복문 돌 때, muzi.gives -> ryan이랑 비교.
+// 3. 선물을 가장 많이 받을 친구가 받을 선물의 수 
 
 import java.util.*;
 
 class Solution {
+    
+    static Map<String, Person> persons = new HashMap<>();
+    
     public int solution(String[] friends, String[] gifts) {
-        Map<String, GiftHistory> histories = new HashMap<>();
+        init(friends, gifts);
         
+        for (int i=0; i<friends.length; i++) {
+            Person person = persons.get(friends[i]);
+            // System.out.println();
+            // System.out.println(person.getName());
+            // System.out.println("receive = " + person.receive);
+            // System.out.println("send = " + person.send);
+
+            // System.out.println();
+            
+            for (int j=0; j<friends.length; j++) {
+                if (i==j) {
+                    continue;
+                }
+                
+                Person friend = persons.get(friends[j]);
+                
+                // System.out.println(friend.getName());
+                
+                // 준 선물 개수 추적
+                int personCount = person.countSendAmount(friend.getName());
+                int friendCount = friend.countSendAmount(person.getName());
+                
+//                 System.out.println("personCount = " + personCount);
+//                 System.out.println("friendCount = " + friendCount);
+                
+                if (personCount > friendCount) {
+                    //System.out.println("선물 받음");
+                    person.gift++;
+                } else if (personCount == friendCount) {
+                    if (person.calPoint() > friend.calPoint()) {
+                        //System.out.println("선물 받음");
+                        person.gift++;
+                    }
+                }
+            }   
+        }
+        
+        int maxValue = 0;
         for (String friend : friends) {
-            histories.put(friend, new GiftHistory());
+            maxValue = Math.max(persons.get(friend).gift, maxValue);
+        }
+        
+        return maxValue;
+    }
+    
+    public void init(String[] friends, String[] gifts) {
+        for (String friend : friends) {
+            persons.put(friend, new Person(friend));
         }
         
         for (String gift : gifts) {
-            String[] s = gift.split(" ");
-            String giver = s[0];
-            String receiver = s[1];
+            String[] splitGift = gift.split(" ");
+            String sender = splitGift[0];
+            String receiver = splitGift[1];
             
-            GiftHistory giftHistory = histories.get(giver);
-            giftHistory.gives.add(receiver);
-            
-            GiftHistory giftHistory2 = histories.get(receiver);
-            giftHistory2.receives.add(giver);
-        } 
-        
-        int maxResult = 0;
-        for (String s : histories.keySet()) {
-            // 무지 차례
-            GiftHistory giftHistory = histories.get(s);
-            int result = 0;
-            // 여기서 계산해야함
-            for (String friend : friends) {
-                if (s == friend) {
-                    continue;
-                }
-                GiftHistory friendGiftHistory = histories.get(friend);
-                int value1 = giftHistory.calReceiveCount(friend); // 무지가 라이언에게 몇 개 받았니
-                int value2 = friendGiftHistory.calReceiveCount(s); // 라이언이 무지에게 몇 개 받았니
-                if (value1 < value2) {
-                    result++;
-                }
-                
-                if (value1 == value2) {
-                    int v = giftHistory.calGiftValue();
-                    int k = friendGiftHistory.calGiftValue();
-                    if (v > k) {
-                        result ++;
-                    }
-                }
-            }
-            maxResult = Math.max(result, maxResult);
+            persons.get(sender).addSender(receiver);
+            persons.get(receiver).addReceiver(sender);
         }
-        return maxResult;
     }
 }
 
-class GiftHistory {
-    public List<String> gives = new ArrayList<>();
-    public List<String> receives = new ArrayList<>();
+class Person {
+    private String name;
+    List<String> receive = new ArrayList<>();
+    List<String> send = new ArrayList<>();
+    int gift = 0;
     
-    public int calGiftValue() {
-        return gives.size() - receives.size();
+    public Person(String name) {
+        this.name = name;
     }
     
-    public int calReceiveCount(String target) {
-        int count = 0;
-        for (String receive : receives) {
-            if (receive.equals(target)) {
-                count++;
+    public void addSender(String name) {
+        send.add(name);
+    }
+    
+    public void addReceiver(String name) {
+        receive.add(name);
+    }
+    
+    public int countSendAmount(String name) {
+        int cnt = 0;
+        for (String s : send) {
+            if (s.equals(name)) {
+                cnt++;
             }
         }
-        return count;
+        return cnt;
     }
     
+    public int calPoint() {
+        return send.size() - receive.size();
+    }
     
+    public String getName() {
+        return name;
+    }
 }

@@ -1,100 +1,105 @@
-import java.util.*;
+// 1. nCn/2 완탐 
+// 2. 1번의 결과에 대한 모든 경우의 수 완탐
+// 3. 이분탐색 / two-pointer로 경우의 수 줄이기
+
+import java.util.*; 
 
 class Solution {
     
     static int d;
     static int[] current;
-    static int currentValue = 0;
-    
     static int maxValue = 0;
-    static int[] result;
-        
+    static int[] maxResult;
+    
     public int[] solution(int[][] dice) {
-        d = dice.length / 2;
+        d = dice.length/2;
         current = new int[d];
-        result = new int[d];
+        maxResult = new int[d];
         
         backtracking(0, 1, dice);
-        
-        return result;
+        return maxResult;
     }
     
     public void backtracking(int depth, int start, int[][] dice) {
         if (depth == d) {
-            boolean[] used = new boolean[d * 2 + 1];
-            
-            for (int c : current) {
-                used[c] = true;
-            }
-            
-            List<Integer> sumA = new ArrayList<>();
-            backtracking2(0, dice, current, sumA);
-            
-            int[] bDice = new int[d];
-            int diceIdx = 0;
-            
-            for (int i=1; i<=d*2; i++) {
-                if (!used[i]) {
-                    bDice[diceIdx] = i;
-                    diceIdx++;
-                }
-            }
-            
-            List<Integer> sumB = new ArrayList<>();
-            backtracking2(0, dice, bDice, sumB);
-            
-            int cnt = count(sumA, sumB);
-            if (cnt > maxValue) {
-                maxValue = cnt;
-                result = current.clone();
-            }
+            findCombination(dice);            
             return;
         }
         
         for (int i=start; i<=d*2; i++) {
             current[depth] = i;
-            backtracking(depth + 1, i+1, dice);
+            backtracking(depth+1, i+1, dice);
         }
     }
     
-    public int count(List<Integer> diceA, List<Integer> diceB) {
-        Collections.sort(diceB);
+    public void findCombination(int[][] dice) {
+        int[] b = findB();
+        // A의 합 배열 구하기 ex 1, 2
+        List<Integer> aSum = new ArrayList<>();
+        List<Integer> bSum = new ArrayList<>();
         
+        // B의 합 배열 구하기 ex 3, 4
+        
+        calSum(0, aSum, current, dice, 0);
+        calSum(0, bSum, b, dice, 0);
+        
+        int amount = calAmount(aSum, bSum);
+        if (amount > maxValue) {
+            maxValue = amount;
+            maxResult = current.clone();
+        }
+    }
+    
+    public int calAmount(List<Integer> aSum, List<Integer> bSum) {
+        Collections.sort(bSum);
         int cnt = 0;
-        for (int a : diceA) {
-            
-            int startIdx = 0;
-            int endIdx = diceB.size();
-            
-            while(startIdx < endIdx) {
-                int midIdx = (startIdx + endIdx) / 2;
-                int middleValue = diceB.get(midIdx);
-
-                if (a > middleValue) {
-                    startIdx = midIdx + 1;
-                } else if (a <= middleValue) {
-                    endIdx = midIdx;
+        for (int a : aSum) {
+            int start = 0;
+            int end = bSum.size();
+            while(start < end) {
+                int mid = (start + end) / 2;
+                int value = bSum.get(mid);
+                
+                if (a > value) {
+                    start = mid + 1;
+                } else {
+                    end = mid;
                 }
             }
-            cnt += startIdx;
+            cnt += start;
         }
         return cnt;
     }
     
-    
-    
-    public void backtracking2(int depth, int[][] dice, int[] diceArr, List<Integer> sum) {
-        if (depth == d) {
-            sum.add(currentValue);
+    public void calSum(int depth, List<Integer> arr, int[] target, int[][] dice, int sum) {
+        if (depth == target.length) {
+            arr.add(sum);
             return;
         }
-        int diceIdx = diceArr[depth] - 1; // 현재 주사위 Idx
         
+        int currentDice = target[depth] - 1;
         for (int i=0; i<6; i++) {
-            currentValue += dice[diceIdx][i];
-            backtracking2(depth + 1, dice, diceArr, sum);
-            currentValue -= dice[diceIdx][i];
+            calSum(depth + 1, arr, target, dice, sum + dice[currentDice][i]);
         }
+        
     }
- 
+   
+    
+    public int[] findB() {
+        boolean[] visited = new boolean[d*2+1];
+        for (int c : current) {
+            visited[c] = true;
+        }
+        
+        int[] b = new int[d];
+        int idx = 0;
+        for (int i=1; i<=d*2; i++) {
+            if (!visited[i]) {
+                b[idx] = i;
+                idx++;
+            }
+        }
+        return b;
+    }
+    
 }

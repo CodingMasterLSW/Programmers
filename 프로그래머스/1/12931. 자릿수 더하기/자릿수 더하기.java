@@ -2,13 +2,12 @@ import java.util.*;
 
 public class Solution {
     public int solution(int n) {
-        String s = String.valueOf(n);
-        
         int sum = 0;
-        for (char c : s.toCharArray()) {
-            sum += c - '0';
+        while (n > 0) {
+            sum += n % 10;     
+            n /= 10;
         }
-        
+    
         return sum;
     }
 }

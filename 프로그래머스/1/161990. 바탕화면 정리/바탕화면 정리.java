@@ -13,18 +13,15 @@ class Solution {
                 if (wallpaper[i].charAt(j) == '.') {
                     continue;
                 }
-                minR = Math.min(minR, j);
-                maxR = Math.max(maxR, j);
-                minC = Math.min(minC, i);
-                maxC = Math.max(maxC, i);          
+                minR = Math.min(minR, i);
+                maxR = Math.max(maxR, i);
+                minC = Math.min(minC, j);
+                maxC = Math.max(maxC, j);          
             }
         }
-        // System.out.println("minR = " + minR);
-        // System.out.println("maxR = " + maxR);
-        // System.out.println("minC = " + minC);
-        // System.out.println("maxC = " + maxC);
+       
         
-        return new int[]{minC, minR, maxC+1, maxR+1};
+        return new int[]{minR, minC, maxR+1, maxC+1};
  
     }
 }

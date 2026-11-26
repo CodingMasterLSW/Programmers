@@ -1,32 +1,20 @@
+import java.util.*;
 
 class Solution {
     public int solution(int[][] sizes) {
-        
-        int[] width = new int[sizes.length];
-        int[] height= new int[sizes.length];
-        
-        int idx = 0;
-        for(int[] size : sizes){
-            width[idx] = Math.max(size[0],size[1]);
-            height[idx] = Math.min(size[0],size[1]);
-            idx++;
-        }
-        
-        int widMax = width[0];
-        int heightMax = height[0];
-        
-        for(int w : width){
-            if(w>widMax){
-                widMax = w;
+        int max = 0;
+        int min = 0;
+        for (int i=0; i<sizes.length; i++) {
+            int[] arr = sizes[i];
+            System.out.println(Arrays.toString(arr));
+            if (arr[0] >= arr[1]) {
+                max = Math.max(max , arr[0]);
+                min = Math.max(min, arr[1]);
+            } else {
+                max = Math.max(max, arr[1]);
+                min = Math.max(min, arr[0]);
             }
         }
-        
-        for(int h :height){
-            if(h>heightMax){
-                heightMax = h;
-            }
-        }
-        
-        return heightMax*widMax;
+        return max * min;
     }
 }

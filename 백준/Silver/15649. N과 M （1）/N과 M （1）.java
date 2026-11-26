@@ -1,43 +1,40 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
-public class Main {
+class Main {
 
     static int N;
     static int M;
-    static StringBuilder sb = new StringBuilder();
-
+    static int[] arr;
+    static boolean[] visited;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-
-        int depth =0;
-        int[] resources = new int[M];
-        boolean[] visited = new boolean[N+1];
-
-        backtracking(depth, resources, visited);
-        System.out.println(sb.toString());
+        arr = new int[M];
+        visited = new boolean[N+1];
+        recursion(0);
     }
 
-    public static void backtracking(int depth, int[] resources, boolean[] visited){
-        if(depth == M){
-            for(int i=0; i<M; i++){
-                sb.append(resources[i]+" ");
+    public static void recursion(int depth) {
+        if (depth == M) {
+            StringBuilder sb = new StringBuilder();
+
+            for (int a : arr) {
+                sb.append(a).append(" ");
             }
-            sb.append("\n");
+            System.out.println(sb.toString());
             return;
         }
 
-        for(int i=1; i<=N; i++){
-            if(!visited[i]){
+        for (int i=1; i<=N; i++) {
+            if (!visited[i]) {
                 visited[i] = true;
-                resources[depth] = i;
-                backtracking(depth+1, resources, visited);
+                arr[depth] = i;
+                recursion(depth+1);
                 visited[i] = false;
             }
         }
     }
-
 }
